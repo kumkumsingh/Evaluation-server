@@ -2,9 +2,9 @@
 const Sequelize = require('sequelize')
 const db = require('../db')
 
-const Class = db.define('class', {
+const Batch = db.define('batch', {
 
-    classNo: {
+    batchNo: {
         type: Sequelize.STRING,
         allowNull: false
     },
@@ -21,4 +21,4 @@ const Class = db.define('class', {
 
 })
 
-module.exports = Class;
+module.exports = Batch

@@ -26,7 +26,7 @@ router.post('/signup', (req, res) => {
             email: req.body.email,
             password: bcrypt.hashSync(req.body.password, 10)
         })
-            .then((user) => {
+            .then((teacher) => {
                 res.status(200).send({
                     status: "Your SignUp is successful!!"
                 })

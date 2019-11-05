@@ -1,27 +1,26 @@
-const Sequelize = require('sequelize')
-const Class = require('../Class/model')
-const db = require('../db')
+const Sequelize = require("sequelize");
+const Batch = require("../Batch/model");
+const db = require("../db");
 
-const Student = db.define('student', {
-
-    fullName: {
-        type: Sequelize.STRING,
-        allowNull: false
-    },
-    imgUrl: {
-        type: Sequelize.STRING,
-        allowNull: false
-    },
-    lstCode: {
-        type: Sequelize.STRING,
-        
-    },
-    lstUpdateDate: {
-        type: Sequelize.STRING,
-        
-    }
-
-})
-Student.belongsTo(Class,{onDelete:'CASCADE'})
-Class.hasMany(Student)
+const Student = db.define("student", {
+  fullName: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  imgUrl: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  lstCode: {
+    type: Sequelize.STRING
+  },
+  lstUpdateDate: {
+    type: Sequelize.STRING
+  },
+  remarks: {
+    type: Sequelize.STRING
+  }
+});
+Student.belongsTo(Batch, { onDelete: "CASCADE" });
+Batch.hasMany(Student);
 module.exports = Student;
