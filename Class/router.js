@@ -12,27 +12,13 @@ router.get('/class',(req,res) => {
      .catch(err => next(err))
 })
 //adding or creating class
-router.post('/class',(req,res) => {
-    const classNo =  req.body.classNo
-    const stDate = req.body.stDate
-    const endDate = req.body.endDate
-    if (!classNo || !stDate || !endDate) {
-        res.status(400).send({
-            message: 'Please fill out all details'
+router.post('/class', (req, res, next) => {
+    Class.create(req.body)
+        .then(data => {
+            res.json(data)
+            //console.log('cheking my data',data)
         })
-    }
-        else {
-            Class.create({
-                classNo: req.body.classNo,
-                stDate: req.body.stDate,
-                endDate: req.body.endDate
-            })
-                .then((user) => {
-                    res.status(200).send({
-                        status: "Your Class is created successfully!!"
-                    })
-                })
-        }
+        .catch(err => next(err))
 })
 
 module.exports = router

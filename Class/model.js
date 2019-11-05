@@ -5,14 +5,17 @@ const db = require('../db')
 const Class = db.define('class', {
 
     classNo: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
     },
     stDate: {
         type: Sequelize.STRING,
+        allowNull: false
         
     },
     endDate: {
         type: Sequelize.STRING,
+        allowNull: false
         
     }
 

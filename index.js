@@ -4,6 +4,7 @@ const bodyParser = require('body-parser')
 const db = require('./db')
 const teacherRouter = require('./Teacher/router')
 const classRouter = require('./Class/router')
+const studentRouter = require('./Student/router')
 
 const app = express()
 const corsMiddleware = cors()
@@ -19,5 +20,6 @@ db.sync({force:false})
 
 app.use(teacherRouter)
 app.use(classRouter)
+app.use(studentRouter)
 
 app.listen(port, () => console.log(`listen to my port ${port}`))
