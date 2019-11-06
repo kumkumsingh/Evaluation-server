@@ -19,5 +19,5 @@ const Student = db.define("student", {
   }
 });
 Student.belongsTo(Batch, { onDelete: "CASCADE" });
-Batch.hasMany(Student);
+Batch.hasMany(Student ,{onDelete:'CASCADE'});
 module.exports = Student;

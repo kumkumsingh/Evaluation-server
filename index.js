@@ -5,6 +5,7 @@ const db = require('./db')
 const userRouter = require('./User/router')
 const batchRouter = require('./Batch/router')
 const studentRouter = require('./Student/router')
+const profileRouter = require('./Profile/router')
 
 
 const app = express()
@@ -22,6 +23,7 @@ db.sync({force:false})
 app.use(userRouter)
 app.use(batchRouter)
 app.use(studentRouter)
+app.use(profileRouter)
 
 
 app.listen(port, () => console.log(`listen to my port ${port}`))
