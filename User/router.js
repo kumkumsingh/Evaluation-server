@@ -1,5 +1,5 @@
 const {Router} = require('express')
-const Teacher = require('./model')
+const User = require('./model')
 const bcrypt = require('bcrypt')
 const { toJWT, toData} = require('./jwt')
 const authMiddleware = require('./authMiddleware')
@@ -8,7 +8,7 @@ const router = new Router()
 
 router.get('/secret-endpoint', authMiddleware, (req, res) => {
     res.send({
-      message: `Thanks for visiting the secret endpoint ${req.teacher.email}.`,
+      message: `Thanks for visiting the secret endpoint ${req.user.email}.`,
     })
   })
 router.post('/signup', (req, res) => {
@@ -21,12 +21,12 @@ router.post('/signup', (req, res) => {
             message: 'Please fill out all details'
         })
     } else {
-        Teacher.create({
+          User.create({
             name: req.body.name,
             email: req.body.email,
             password: bcrypt.hashSync(req.body.password, 10)
         })
-            .then((teacher) => {
+            .then((user) => {
                 res.status(200).send({
                     status: "Your SignUp is successful!!"
                 })
@@ -43,7 +43,7 @@ router.post('/signup', (req, res) => {
       })
     }
     else {
-    Teacher  
+    User  
     .findOne({
         where: {
           email: req.body.email
@@ -61,7 +61,7 @@ router.post('/signup', (req, res) => {
     
           // 3. if the password is correct, return a JWT with the userId of the user (user.id)
           res.send({
-            jwt: toJWT({ teacherId: entity.id })
+            jwt: toJWT({ userId: entity.id })
           })
         }
         else {

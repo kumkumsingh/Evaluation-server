@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const db = require('./db')
-const teacherRouter = require('./Teacher/router')
+const userRouter = require('./User/router')
 const batchRouter = require('./Batch/router')
 const studentRouter = require('./Student/router')
 
@@ -19,7 +19,7 @@ db.sync({force:false})
 .then(() => console.log("Database connected"))
 .catch(console.error)
 
-app.use(teacherRouter)
+app.use(userRouter)
 app.use(batchRouter)
 app.use(studentRouter)
 

@@ -2,7 +2,7 @@ const { Router } = require("express");
 const Sequelize = require("sequelize");
 const Student = require("./model");
 const Batch = require("../Batch/model");
-const authMiddleware = require("../Teacher/authMiddleware");
+const authMiddleware = require("../User/authMiddleware");
 
 const router = new Router();
 //getting all details of a students
@@ -29,7 +29,7 @@ router.post("/student", (req, res, next) => {
     .then(data => res.json(data))
     .catch(next);
 });
-//getting student details based on student id and including class to see in which class student belonsg
+//getting student details based on student id and including Batch to see in which batch student belonsg
 router.get("/student/:id", (req, res, next) => {
   Student.findByPk(req.params.id, { include: [Batch] })
     .then(student => res.json(student))

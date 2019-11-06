@@ -16,9 +16,6 @@ const Student = db.define("student", {
   },
   lstUpdateDate: {
     type: Sequelize.STRING
-  },
-  remarks: {
-    type: Sequelize.STRING
   }
 });
 Student.belongsTo(Batch, { onDelete: "CASCADE" });
