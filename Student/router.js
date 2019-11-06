@@ -5,6 +5,14 @@ const authMiddleware = require("../User/authMiddleware");
 const sequelize = require("sequelize");
 
 const router = new Router();
+//getting all details of students
+router.get('/student',(req,res) => {
+  Student.findAll()
+   .then(students => {
+       res.json(students)
+   })
+   .catch(err => next(err))
+})
 //getting all details of a students based on their last color code 
 router.get("/student/percentage", (req, res, next) => {
   Student.findAll({
@@ -12,8 +20,8 @@ router.get("/student/percentage", (req, res, next) => {
       [sequelize.fn('COUNT', sequelize.col('lstCode')),'count']], 
     group: ['lstCode']
   })
-    .then(students => {
-      res.json(students);
+    .then(result => {
+      res.json(result);
     })
     .catch(err => next(err));
 });
