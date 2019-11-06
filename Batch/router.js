@@ -1,6 +1,6 @@
 const { Router } =require('express')
 const Batch = require('./model')
-const Student = require('./model')
+const Student = require('../Student/model')
 const authMiddleware = require('../User/authMiddleware')
 
 const router = new Router()
@@ -13,7 +13,7 @@ router.get('/batch',(req,res) => {
      .catch(err => next(err))
 })
 //adding or creating class
-router.post('/batch',(req, res, next) => {
+router.post('/batch',authMiddleware,(req, res, next) => {
     Batch.create(req.body)
         .then(data => {
             console.log('cheking my data',data)
@@ -22,7 +22,9 @@ router.post('/batch',(req, res, next) => {
         })
         .catch(err => next(err))
 })
+// for getting details of students in a batch
 router.get('/batch/:id', (request, response, next) => {
+    console.log('checking inside batch/id',request.params.id)
     Batch.findByPk(request.params.id, { include: [Student] })
         .then(batch => response.send(batch))
         .catch(err => next(err))

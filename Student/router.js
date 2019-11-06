@@ -24,7 +24,7 @@ router.get("/student/random", (req, res, next) => {
   });
 //{attributes: { include: [[Sequelize.fn('COUNT', Sequelize.col('lstCode')), 'no_lstCode']] }}
 //adding or creating students
-router.post("/student", (req, res, next) => {
+router.post("/student",authMiddleware, (req, res, next) => {
   Student.create(req.body)
     .then(data => res.json(data))
     .catch(next);
