@@ -5,6 +5,7 @@ const authMiddleware = require("../User/authMiddleware");
 const sequelize = require("sequelize");
 
 const router = new Router();
+const Op = sequelize.Op;
 //getting all details of students
 router.get('/student',(req,res) => {
   Student.findAll()
@@ -20,18 +21,22 @@ router.get("/student/percentage", (req, res, next) => {
       [sequelize.fn('COUNT', sequelize.col('lstCode')),'count']], 
     group: ['lstCode']
   })
-    .then(result => {
+  .then(result => {
+    
       res.json(result);
     })
     .catch(err => next(err));
 });
 //to get random record based on algorithm
 router.get("/student/random", (req, res, next) => {
-  Student.findOne({ random: true }).then(student => {
+  //,[sequelize.fn('order',: 'random()', limit: 1
+   Student.findAll({attributes: ['id', 'fullName','lstCode'],where: {
+    lstCode: 'RED'},limit:1})
+  .then(student => {
     res.json(student);
   });
 });
-//adding or creating students
+
 router.post("/student", authMiddleware, (req, res, next) => {
   Student.create(req.body)
     .then(data => res.json(data))

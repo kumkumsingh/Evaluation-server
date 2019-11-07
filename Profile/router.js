@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const sequelize = require("sequelize");
+
 const Profile = require('./model')
 const Student = require('../Student/model')
 
@@ -16,8 +16,15 @@ router.post("/profile", (req, res, next) => {
       .then(data => res.json(data))
       .catch(next);
   });
+  router.get("/profile", (req, res, next) => {
+    Profile.findAll()
+    .then(profile => {
+        res.json(profile)
+    })
+    .catch(err => next(err))
+  });
   router.put("/profile/:id", (req, res, next) => {
-    Profile.findByPk(req.params.id)
+    Profile.findByPk(req.params.id ,{ include: [Student] })
       .then(data => {
         if (data) {
           return data.update(req.body).then(data => {
