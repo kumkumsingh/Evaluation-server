@@ -6,33 +6,66 @@ const sequelize = require("sequelize");
 
 const router = new Router();
 const Op = sequelize.Op;
+let redCount = 0;
 //getting all details of students
-router.get('/student',(req,res) => {
+router.get("/student", (req, res) => {
   Student.findAll()
-   .then(students => {
-       res.json(students)
-   })
-   .catch(err => next(err))
-})
-//getting all details of a students based on their last color code 
+    .then(students => {
+      res.json(students);
+    })
+    .catch(err => next(err));
+});
+//getting all details of a students based on their last color code
 router.get("/student/percentage", (req, res, next) => {
   Student.findAll({
-    attributes: ['lstCode', 
-      [sequelize.fn('COUNT', sequelize.col('lstCode')),'count']], 
-    group: ['lstCode']
+    attributes: [
+      "lstCode",
+      [sequelize.fn("COUNT", sequelize.col("lstCode")), "count"]
+    ],
+    group: ["lstCode"]
   })
-  .then(result => {
-    
-      res.json(result);
+    .then(result => {
+      let redPercent = 0;
+      let redCount = 0;
+      let greenPercent = 0;
+      let greenCount = 0;
+      let yellowPercent = 0;
+      let yellowCount = 0;
+
+      const totalCount = result.reduce((accumulator, currentvalue) => {
+        switch (currentvalue.dataValues.lstCode) {
+          case "RED":
+            redCount = parseInt(currentvalue.dataValues.count);
+            break;
+          case "GREEN":
+            greenCount = parseInt(currentvalue.dataValues.count);
+            break;
+          case "YELLOW":
+            yellowCount = parseInt(currentvalue.dataValues.count);
+            break;
+          default:
+            break;
+        }
+        return accumulator + parseInt(currentvalue.dataValues.count);
+      }, 0);
+      redPercent = (redCount / totalCount) * 100;
+      greenPercent = (greenCount / totalCount) * 100;
+      yellowPercent = (yellowCount / totalCount) * 100;
+
+      res.json([redPercent, greenPercent, yellowPercent]);
     })
     .catch(err => next(err));
 });
 //to get random record based on algorithm
 router.get("/student/random", (req, res, next) => {
   //,[sequelize.fn('order',: 'random()', limit: 1
-   Student.findAll({attributes: ['id', 'fullName','lstCode'],where: {
-    lstCode: 'RED'},limit:1})
-  .then(student => {
+  Student.findAll({
+    attributes: ["id", "fullName", "lstCode"],
+    where: {
+      lstCode: "RED"
+    },
+    limit: 1
+  }).then(student => {
     res.json(student);
   });
 });
@@ -45,7 +78,7 @@ router.post("/student", authMiddleware, (req, res, next) => {
 //getting student details based on student id and including Batch to see in which batch student belonsg
 router.get("/student/:id", (req, res, next) => {
   Student.findByPk(req.params.id, { include: [Batch] })
-    .then(student =>res.json(student))
+    .then(student => res.json(student))
     .catch(next);
 });
 //Update student details
@@ -59,8 +92,9 @@ router.put("/student/:id", (req, res, next) => {
       }
     })
     .catch(err => {
-      console.log("error: ",err) 
-      next(err)});
+      console.log("error: ", err);
+      next(err);
+    });
 });
 //removing a student
 router.delete("/student/:id", (req, res, next) => {
