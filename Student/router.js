@@ -58,13 +58,27 @@ router.get("/student/percentage", (req, res, next) => {
 });
 //to get random record based on algorithm
 router.get("/student/random", (req, res, next) => {
-  //,[sequelize.fn('order',: 'random()', limit: 1
-  Student.findAll({
+  let randomNum = parseInt(Math.random() * 100);
+  switch (true) {
+    case randomNum > 0 && randomNum <= 50:
+      randomCol = "RED";
+      break;
+
+    case randomNum >= 51 && randomNum <= 83:
+      randomCol = "YELLOW";
+      break;
+    case randomNum >= 84 && randomNum <= 100:
+      randomCol = "GREEN";
+      break;
+    default:
+      break;
+  }
+  Student.findOne({
     attributes: ["id", "fullName", "lstCode"],
     where: {
-      lstCode: "RED"
+      lstCode: randomCol
     },
-    limit: 1
+    order: [sequelize.fn("RANDOM")]
   }).then(student => {
     res.json(student);
   });
