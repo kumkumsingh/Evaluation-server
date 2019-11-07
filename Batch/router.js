@@ -30,32 +30,6 @@ router.get('/batch/:id', (request, response, next) => {
         .catch(err => next(err))
 
 })
-//to get random record based on algorithm
-router.get("/batch/random:id", (req, res, next) => {
-    let randomNum = parseInt(Math.random() * 100);
-    switch (true) {
-      case randomNum > 0 && randomNum <= 50:
-        randomCol = "RED";
-        break;
-  
-      case randomNum >= 51 && randomNum <= 83:
-        randomCol = "YELLOW";
-        break;
-      case randomNum >= 84 && randomNum <= 100:
-        randomCol = "GREEN";
-        break;
-      default:
-        break;
-    }
-    Student.findOne({
-      attributes: ["id", "fullName", "imgUrl"],
-      where: {
-        lstCode: randomCol
-      },
-      order: [sequelize.fn("RANDOM")]
-    }).then(student => {
-      res.json([student]);
-    });
-  });
+
 
 module.exports = router
