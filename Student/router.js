@@ -16,12 +16,15 @@ router.get("/student", (req, res) => {
     .catch(err => next(err));
 });
 //getting all details of a students based on their last color code
-router.get("/student/percentage", (req, res, next) => {
+router.get("/student/percentage/:id", (req, res, next) => {
   Student.findAll({
     attributes: [
       "lstCode",
       [sequelize.fn("COUNT", sequelize.col("lstCode")), "count"]
     ],
+    where: {
+      batchId: req.params.id
+    },
     group: ["lstCode"]
   })
     .then(result => {
@@ -57,7 +60,7 @@ router.get("/student/percentage", (req, res, next) => {
     .catch(err => next(err));
 });
 //to get random record based on algorithm
-router.get("/student/random", (req, res, next) => {
+router.get("/student/random/:id", (req, res, next) => {
   let randomNum = parseInt(Math.random() * 100);
   switch (true) {
     case randomNum > 0 && randomNum <= 50:
@@ -74,13 +77,14 @@ router.get("/student/random", (req, res, next) => {
       break;
   }
   Student.findOne({
-    attributes: ["id", "fullName", "lstCode"],
+    attributes: ["id", "fullName", "imgUrl"],
     where: {
-      lstCode: randomCol
+      lstCode: randomCol,
+      batchId: req.params.id
     },
     order: [sequelize.fn("RANDOM")]
   }).then(student => {
-    res.json(student);
+    res.json([student]);
   });
 });
 
