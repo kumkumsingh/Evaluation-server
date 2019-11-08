@@ -8,7 +8,7 @@ const router = new Router();
 const Op = sequelize.Op;
 let redCount = 0;
 //getting all details of students
-router.get("/student", (req, res) => {
+router.get("/student",authMiddleware, (req, res) => {
   Student.findAll()
     .then(students => {
       res.json(students);
@@ -16,7 +16,7 @@ router.get("/student", (req, res) => {
     .catch(err => next(err));
 });
 //getting all details of a students based on their last color code
-router.get("/student/percentage/:id", (req, res, next) => {
+router.get("/student/percentage/:id",authMiddleware, (req, res, next) => {
   Student.findAll({
     attributes: [
       "lstCode",
@@ -60,7 +60,7 @@ router.get("/student/percentage/:id", (req, res, next) => {
     .catch(err => next(err));
 });
 //to get random record based on algorithm
-router.get("/student/random/:id", (req, res, next) => {
+router.get("/student/random/:id",authMiddleware, (req, res, next) => {
   Student.findAll({
     attributes: [
       "lstCode",
@@ -138,12 +138,12 @@ router.post("/student", authMiddleware, (req, res, next) => {
 });
 //getting student details based on student id and including Batch to see in which batch student belonsg
 router.get("/student/:id", (req, res, next) => {
-  Student.findByPk(req.params.id, { include: [Batch] })
+  Student.findByPk(req.params.id)
     .then(student => res.json(student))
     .catch(next);
 });
 //Update student details
-router.put("/student/:id", (req, res, next) => {
+router.put("/student/:id", authMiddleware,(req, res, next) => {
   console.log('checking req.body',req)
   Student.findByPk(req.params.id)
     .then(student => {
@@ -159,7 +159,7 @@ router.put("/student/:id", (req, res, next) => {
     });
 });
 //removing a student
-router.delete("/student/:id", (req, res, next) => {
+router.delete("/student/:id",authMiddleware, (req, res, next) => {
   Student.destroy({
     where: {
       id: req.params.id

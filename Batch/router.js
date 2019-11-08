@@ -23,7 +23,7 @@ router.post('/batch',authMiddleware,(req, res, next) => {
         .catch(err => next(err))
 })
 // for getting details of students in a batch
-router.get('/batch/:id', (request, response, next) => {
+router.get('/batch/:id', authMiddleware,(request, response, next) => {
     console.log('checking inside batch/id',request.params.id)
     Batch.findByPk(request.params.id, { include: [Student] })
         .then(batch => response.send(batch))

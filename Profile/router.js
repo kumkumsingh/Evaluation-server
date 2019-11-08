@@ -11,7 +11,7 @@ router.post("/profile", (req, res, next) => {
     .catch(next);
 });
 router.get("/profile/:id", (req, res, next) => {
-  Profile.findByPk(req.params.id, { include: [Student] })
+  Profile.findByPk(req.params.id)
     .then(data => res.json(data))
     .catch(next);
 });
