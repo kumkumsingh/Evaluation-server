@@ -61,7 +61,6 @@ router.get("/student/percentage/:id", (req, res, next) => {
 });
 //to get random record based on algorithm
 router.get("/student/random/:id", (req, res, next) => {
-  
   Student.findAll({
     attributes: [
       "lstCode",
@@ -71,66 +70,65 @@ router.get("/student/random/:id", (req, res, next) => {
       batchId: req.params.id
     },
     group: ["lstCode"]
-  })
-    .then(result => {
-      let redPercent = 0;
-      let redCount = 0;
-      let greenPercent = 0;
-      let greenCount = 0;
-      let yellowPercent = 0;
-      let yellowCount = 0;
+  }).then(result => {
+    let redPercent = 0;
+    let redCount = 0;
+    let greenPercent = 0;
+    let greenCount = 0;
+    let yellowPercent = 0;
+    let yellowCount = 0;
 
-      const totalCount = result.reduce((accumulator, currentvalue) => {
-        switch (currentvalue.dataValues.lstCode) {
-          case "RED":
-            redCount = parseInt(currentvalue.dataValues.count);
-            break;
-          case "GREEN":
-            greenCount = parseInt(currentvalue.dataValues.count);
-            break;
-          case "YELLOW":
-            yellowCount = parseInt(currentvalue.dataValues.count);
-            break;
-          default:
-            break;
-        }
-        return accumulator + parseInt(currentvalue.dataValues.count);
-      }, 0);
-      redPercent = (redCount / totalCount) * 100;
-      greenPercent = (greenCount / totalCount) * 100;
-      yellowPercent = (yellowCount / totalCount) * 100;
-  let colorFound = false;
-  do {
-  let randomNum = parseInt(Math.random() * 100);
-  switch (true) {
-    case ((randomNum > 0 && randomNum <= 50) && redCount > 0) :
-      randomCol = "RED";
-      colorFound = true;
-      break;
-    case ((randomNum >= 51 && randomNum <= 83) && yellowCount > 0 ):
-      randomCol = "YELLOW";
-      colorFound = true;
-      break;
-    case ((randomNum >= 84 && randomNum <= 100) && greenCount > 0) :
-      randomCol = "GREEN";
-      colorFound = true;
-      break;
-    default:
-      break;
-  }
-} while(!colorFound);
+    const totalCount = result.reduce((accumulator, currentvalue) => {
+      switch (currentvalue.dataValues.lstCode) {
+        case "RED":
+          redCount = parseInt(currentvalue.dataValues.count);
+          break;
+        case "GREEN":
+          greenCount = parseInt(currentvalue.dataValues.count);
+          break;
+        case "YELLOW":
+          yellowCount = parseInt(currentvalue.dataValues.count);
+          break;
+        default:
+          break;
+      }
+      return accumulator + parseInt(currentvalue.dataValues.count);
+    }, 0);
+    redPercent = (redCount / totalCount) * 100;
+    greenPercent = (greenCount / totalCount) * 100;
+    yellowPercent = (yellowCount / totalCount) * 100;
+    let colorFound = false;
+    do {
+      let randomNum = parseInt(Math.random() * 100);
+      switch (true) {
+        case randomNum > 0 && randomNum <= 50 && redCount > 0:
+          randomCol = "RED";
+          colorFound = true;
+          break;
+        case randomNum >= 51 && randomNum <= 83 && yellowCount > 0:
+          randomCol = "YELLOW";
+          colorFound = true;
+          break;
+        case randomNum >= 84 && randomNum <= 100 && greenCount > 0:
+          randomCol = "GREEN";
+          colorFound = true;
+          break;
+        default:
+          break;
+      }
+    } while (!colorFound);
 
-  Student.findOne({
-    attributes: ["id", "fullName", "imgUrl"],
-    where: {
-      lstCode: randomCol,
-      batchId: req.params.id
-    },
-    order: [sequelize.fn("RANDOM")]
-  }).then(student => {
-    res.json([student]);
+    Student.findOne({
+      attributes: ["id", "fullName", "imgUrl"],
+      where: {
+        lstCode: randomCol,
+        batchId: req.params.id
+      },
+      order: [sequelize.fn("RANDOM")]
+    }).then(student => {
+      res.json([student]);
+    });
   });
-});
 });
 
 router.post("/student", authMiddleware, (req, res, next) => {
@@ -146,6 +144,7 @@ router.get("/student/:id", (req, res, next) => {
 });
 //Update student details
 router.put("/student/:id", (req, res, next) => {
+  console.log('checking req.body',req)
   Student.findByPk(req.params.id)
     .then(student => {
       if (student) {
